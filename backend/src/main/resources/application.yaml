@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: optional:file:./.env[.properties]
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ghostpay}
     username: ${DATABASE_USERNAME:ghostpay}
-    password: ${DATABASE_PASSWORD:ghostpay_dev_password}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
