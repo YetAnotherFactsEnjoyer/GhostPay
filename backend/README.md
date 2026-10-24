@@ -1,8 +1,10 @@
 # GhostPay backend
 
-Requires Java 21 and PostgreSQL 17. Run `./gradlew bootRun` from this directory.
+Requires Java 21 and PostgreSQL 17. For the recommended local API + Docker database setup,
+see [backend development in the main README](../README.md#3-develop-the-backend-or-the-full-application).
+Run `./gradlew bootRun` from this directory after configuring its datasource.
 Spring loads the optional, git-ignored `.env` file here; environment variables
-override its values. Use the root `.env.example` as a reference when setting up another machine
+override its values. Use this directory's `.env.example` as a reference when setting up another machine
 and supply the existing database credentials and a random JWT secret of at least
 32 bytes. Keep `.env` private (`chmod 600 .env`).
 

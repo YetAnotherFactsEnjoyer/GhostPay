@@ -2,6 +2,10 @@
 
 ## Development
 
+For the recommended Docker API + local Vite setup, follow
+[frontend development in the main README](../README.md#2-develop-the-frontend).
+The commands below expect the backend to be available on port 8080.
+
 ```sh
 npm ci
 npm run dev
@@ -21,7 +25,7 @@ application and proxies `/api` requests to the backend container. PostgreSQL
 data is persisted in the `ghostpay-postgres` Docker volume.
 
 Before starting Compose, set `DATABASE_PASSWORD` and
-`JWT_SECRET` in a root `.env` file before starting Compose. `JWT_SECRET` must
+`JWT_SECRET` in a root `.env` file. `JWT_SECRET` must
 contain at least 32 UTF-8 bytes.
 
 Development requests use the Vite `/api` proxy to `http://localhost:8080`, so
