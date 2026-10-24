@@ -1,0 +1,9 @@
+.git
+.github
+backend/.gradle
+backend/build
+backend/.env
+frontend/node_modules
+frontend/dist
+frontend/.env*
+**/*.log
