@@ -1,0 +1,24 @@
+:root {
+  color-scheme: light;
+  --background: #f2f6f3;
+  --sidebar: #e5eee8;
+  --surface: #ffffff;
+  --secondary: #f2f7f3;
+  --subtle: #eaf2ed;
+  --hover: #dcebe2;
+  --accent: #16764b;
+  --accent-dark: #155239;
+  --accent-text: #126b42;
+  --accent-hover: #12643f;
+  --on-accent: #ffffff;
+  --border: #d4e1d8;
+  --border-strong: #16764b;
+  --text: #172c22;
+  --text-secondary: #4e6659;
+  --text-muted: #586f62;
+  --positive: #167044;
+  --negative: #b32632;
+  --warning: #8a5b08;
+  --info: #245eae;
+  --radius: 14px;
+}
