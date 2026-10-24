@@ -7,6 +7,10 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+// Compatible security patches beyond the Spring Boot 4.1.1 defaults.
+ext['jackson-bom.version'] = '3.1.7'
+ext['tomcat.version'] = '11.0.25'
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -34,6 +38,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.testcontainers:testcontainers-postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -46,4 +51,19 @@ tasks.register('flywayRepair', JavaExec) {
 	description = 'Explicitly repair Flyway history after verifying the applied schema matches the migrations.'
 	classpath = sourceSets.main.runtimeClasspath
   mainClass = 'com.ghostpay.maintenance.FlywayRepair'
+}
+
+// Export resolved versions, rather than guessing from declared dependencies.
+tasks.register('exportRuntimeDependencies') {
+    group = 'verification'
+    description = 'Export Maven runtime coordinates for scripts/audit-runtime-dependencies.py.'
+    doLast {
+        def queries = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
+            [package: [ecosystem: 'Maven', name: it.moduleVersion.id.group + ':' + it.name], version: it.moduleVersion.id.version]
+        }.unique()
+        def output = layout.buildDirectory.file('reports/runtime-dependencies-osv.json').get().asFile
+        output.parentFile.mkdirs()
+        output.text = groovy.json.JsonOutput.toJson([queries: queries])
+        println "Exported ${queries.size()} runtime coordinates to ${output}"
+    }
 }
