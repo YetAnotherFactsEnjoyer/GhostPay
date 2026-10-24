@@ -3,11 +3,11 @@ package com.ghostpay.terminal.application;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.type.format.OsonDocumentWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ghostpay.merchant.domain.Merchant;
+import com.ghostpay.merchant.domain.exception.MerchantNotFoundException;
 import com.ghostpay.merchant.persistence.MerchantRepository;
 import com.ghostpay.terminal.domain.Terminal;
 import com.ghostpay.terminal.persistence.TerminalRepository;
@@ -26,14 +26,14 @@ public class TerminalService {
   }
 
   @Transactional
-  public TerminalService createTerminal(
+  public Terminal createTerminal(
     String name,
     UUID merchantId,
     UUID ownerId
   ) {
     Merchant merchant = merchantRepository
       .findByIdAndOwner_Id(merchantId, ownerId)
-      .orElseThrow(() -> new IllegalArgumentException("Merchant not fond"));
+      .orElseThrow(MerchantNotFoundException::new);
 
     Terminal terminal = new Terminal(name, merchant);
 
@@ -47,7 +47,7 @@ public class TerminalService {
   ) {
     merchantRepository
       .findByIdAndOwner_Id(merchantId, ownerId)
-      .orElseThrow(() -> new IllegalArgumentException("Merchant not found"));
+      .orElseThrow(MerchantNotFoundException::new);
 
     return terminalRepository.findByMerchant_Id(merchantId);
   }

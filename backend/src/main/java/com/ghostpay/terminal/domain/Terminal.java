@@ -3,7 +3,6 @@ package com.ghostpay.terminal.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.ghostpay.merchant.api.MerchantController;
 import com.ghostpay.merchant.domain.Merchant;
 
 import jakarta.persistence.*;

@@ -3,7 +3,6 @@ package com.ghostpay.terminal.api;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.util.threads.RetryableQueue;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -14,8 +13,6 @@ import jakarta.validation.Valid;
 import com.ghostpay.terminal.api.dto.CreateTerminalRequest;
 import com.ghostpay.terminal.api.dto.TerminalResponse;
 import com.ghostpay.terminal.application.TerminalService;
-import com.ghostpay.terminal.domain.TerminalStatus;
-import com.ghostpay.terminal.persistence.TerminalRepository;
 
 @RestController
 @RequestMapping("/api/v1/terminals")
@@ -29,7 +26,7 @@ public class TerminalController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public TerminalController createTerminal(
+  public TerminalResponse createTerminal(
     @Valid @RequestBody CreateTerminalRequest request,
     @AuthenticationPrincipal Jwt jwt
   ) {
