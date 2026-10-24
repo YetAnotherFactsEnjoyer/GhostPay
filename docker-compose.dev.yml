@@ -1,0 +1,6 @@
+# Optional database access for a locally running Spring Boot API or SQL client.
+# docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
+services:
+  db:
+    ports:
+      - "127.0.0.1:15432:5432"
