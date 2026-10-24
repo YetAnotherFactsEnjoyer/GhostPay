@@ -1,11 +1,13 @@
 package com.ghostpay.identity.application;
 
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import com.ghostpay.identity.persistence.UserRepository;
-import org.springframework.stereotype.Service;
 import com.ghostpay.identity.domain.User;
 import com.ghostpay.identity.domain.exception.*;
+import com.ghostpay.identity.persistence.UserRepository;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class LoginUserService {
@@ -18,7 +20,10 @@ public class LoginUserService {
     }
 
     public User login(String email, String rawPassword) {
-        String normalizedEmail = email.trim().toLowerCase();
+        if (rawPassword.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new InvalidCredentialsException();
+        }
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
 
         User user = userRepository
             .findByEmail(normalizedEmail)
