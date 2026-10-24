@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: optional:file:./.env[.properties]
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ghostpay}
     username: ${DATABASE_USERNAME:ghostpay}
-    password: ${DATABASE_PASSWORD:ghostpay_dev_password}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -15,6 +17,8 @@ spring:
     locations: classpath:db/migration
 
 security:
+  cors:
+    allowed-origins: ${FRONTEND_ORIGINS:}
   jwt:
     secret: ${JWT_SECRET}
     issuer: ghostpay
@@ -22,3 +26,8 @@ security:
 
 server:
   port: 8080
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
