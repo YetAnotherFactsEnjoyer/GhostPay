@@ -1,18 +1,23 @@
 package com.ghostpay.shared.security.jwt;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 
 @Configuration
 @EnableConfigurationProperties(JwtProperties.class)
@@ -44,11 +49,21 @@ public class JwtConfig {
             .macAlgorithm(MacAlgorithm.HS256)
             .build();
 
-        decoder.setJwtValidator(
-            JwtValidators.createDefaultWithIssuer(
-                properties.issuer()
-            )
-        );
+        OAuth2TokenValidator<Jwt> requiredClaims = jwt -> {
+            try {
+                String subject = jwt.getSubject();
+                if (subject == null || !UUID.fromString(subject).toString().equals(subject)
+                    || jwt.getExpiresAt() == null) {
+                    throw new IllegalArgumentException();
+                }
+                return OAuth2TokenValidatorResult.success();
+            } catch (IllegalArgumentException exception) {
+                return OAuth2TokenValidatorResult.failure(
+                    new OAuth2Error("invalid_token", "Invalid token claims", null));
+            }
+        };
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
+            JwtValidators.createDefaultWithIssuer(properties.issuer()), requiredClaims));
 
         return decoder;
     }

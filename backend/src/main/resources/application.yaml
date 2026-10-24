@@ -17,6 +17,8 @@ spring:
     locations: classpath:db/migration
 
 security:
+  cors:
+    allowed-origins: ${FRONTEND_ORIGINS:}
   jwt:
     secret: ${JWT_SECRET}
     issuer: ghostpay
@@ -24,3 +26,8 @@ security:
 
 server:
   port: 8080
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
